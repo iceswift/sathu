@@ -8,6 +8,7 @@ import React, { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { SignOutButton, UserButton, useUser } from '@clerk/nextjs'
 import Search from "./Search";
+import { Input } from "@/components/ui/input"
 
 import {
     DropdownMenu,
@@ -28,7 +29,7 @@ function Header() {
 
     }, [])
     return (
-        <div className='p-6 px-10 flex justify-between shadow-sm fixed top-0 w-full bg-white'>
+        <div className='z-10 p-6 px-10 flex justify-between shadow-sm fixed top-0 w-full bg-[#ececec]'>
             <div>
                 <Link href={'/'}>
                     <Image
@@ -49,8 +50,8 @@ function Header() {
 
             </div>
 
-            <div className="flex-1 w-full sm:w-auto flex justify-center sm:justify-center mb-4 mt-1 sm:mb-0">
-                <Search />
+            <div className="w=96">
+                <Input className="outline-none transition-all" placeholder="Search" />
             </div>
 
 

@@ -20,9 +20,13 @@ export default function Home() {
   }, [])
 
    return (
-     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-full">
-      {temples.map(temple => <Card key={temple.id} temple={temple}  />)}
-     </div>
+    <div>
+      <div className="mt-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-full">
+          {temples.map(temple => <Card key={temple.id} temple={temple}  />)}
+        </div>
+      </div>
+    </div>
    );
 }
 

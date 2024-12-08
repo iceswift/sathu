@@ -4,6 +4,7 @@ import Provider from "./Provider";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { Toaster } from "react-hot-toast";
+import Header from "./_components/Header";
 
 
 const geistSans = localFont({
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
       >
         <Provider>
           <Toaster position="bottom-right" reverseOrder={false} />
+          <Header />
           {children}
         </Provider>
           

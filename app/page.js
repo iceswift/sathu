@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ListingMapView from "./_components/ListingMapView";
+
 import { supabase } from '@/utils/supabase/client';
 import { useEffect, useState } from "react";
 import Card from "./_components/Card";

@@ -29,7 +29,7 @@ export default function Card({ temple }) {
 
   return (
     <Link href={`/place/${temple.id}`}>
-      <div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer hover:-translate-y-1 transform duration-200">
+      <div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer hover:-translate-y-1 transform duration-200 border border-transparent p-3 hover:border hover:border-black">
         {/* รูปภาพ */}
         {image && (
           <Image

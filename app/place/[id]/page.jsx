@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from "@/utils/supabase/client";
 import Image from 'next/image';
-import { Bath, BedDouble, CarFront, MapPin, Share, Square } from 'lucide-react'; // รวมไว้ที่เดียว
+import { CarFront, MapPin, Share} from 'lucide-react'; // รวมไว้ที่เดียว
 import GoogleMapSection from '@/app/_components/GoogleMapSection';
 import { Button } from '@/components/ui/button';
 
@@ -14,12 +14,11 @@ import { FaAccessibleIcon } from 'react-icons/fa';
 import { FaFan } from 'react-icons/fa'; // พัดลม
 import { TbAirConditioning } from "react-icons/tb"; // แอร์
 import { MdWindow } from 'react-icons/md'; // หน้าต่าง
-import { FaSnowflake } from 'react-icons/fa';
 
 
 
 
-export default function Page({ params }) {
+export default function Place({ params }) {
   const [temple, setTemple] = useState(null);
   const [templeImages, setTempleImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -183,7 +182,7 @@ export default function Page({ params }) {
 
           {/* คำอธิบาย */}
           <div>
-            <h2 className="font-bold text-2xl mb-2">What's Special</h2>
+            <h2 className="font-bold text-2xl mb-2">What&apos;s Special</h2>
             <p className="text-gray-600">{temple.description}</p>
           </div>
 

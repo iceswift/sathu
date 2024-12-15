@@ -74,3 +74,23 @@ div.cl-internal-phfxlr {
   box-shadow: none !important; /* บังคับปิดเงา */
   border: none !important; /* บังคับปิดกรอบ */
 }
+
+
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25%; /* หรือกำหนดขนาดที่ต้องการ */
+  padding: 16px; /* เพิ่ม Padding */
+  margin: 0 auto; /* จัดให้อยู่กึ่งกลาง */
+}
+
+/*.rdr-defined-ranges ซ่อน preset dates ที่ยังเหลืออยู่ */
+.rdrDefinedRangesWrapper {
+  display: none !important; /* ซ่อนส่วน preset dates */
+}
+
+/* ปรับให้ปฏิทินเต็มพื้นที่ */
+.rdrCalendarWrapper {
+  width: 100% !important;
+}

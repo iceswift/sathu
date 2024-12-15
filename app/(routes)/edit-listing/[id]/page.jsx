@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/utils/supabase/client';
-import { toast } from 'sonner';
 import { useUser } from '@clerk/nextjs';
 import FileUpload from '../_components/FileUpload';
 import { Loader } from 'lucide-react';
@@ -31,6 +30,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function EditListing({ params: paramsPromise }) {
     const params = React.use(paramsPromise); // Unwrapping the promise
@@ -70,27 +71,31 @@ function EditListing({ params: paramsPromise }) {
     const onSubmitHandler = async (formValue) => {
         try {
             setLoading(true);
-
-            console.log('Submitting Form Value:', formValue);
+            console.log('Submitting Form Value Before:', formValue);
+            const newObject = Object.fromEntries(
+                Object.entries(formValue).filter(([key, value]) => (value != "" && value != 0))
+            );
+            console.log('Submitting Form Value:', newObject);
 
             // Update the listing
             const { data, error } = await supabase
                 .from('listing')
-                .update(formValue)
+                .update({
+                    ...newObject,
+                    createdBy: user?.primaryEmailAddress?.emailAddress || 'Unknown',
+                })
                 .eq('id', params?.id)
                 .select();
 
             if (error) {
-                console.error('Error updating listing:', error);
-                toast('Error while updating listing');
+                console.log('Error updating listing:', error);
+                toast('Error while updating listing', { type: "error" });
                 return;
             }
-
+            
             if (data) {
                 console.log('Listing updated:', data);
-                toast('Listing updated and Published');
-                
-                
+                toast('Listing updated', { type: "success" });
             }
 
             // อัปโหลดรูปภาพ
@@ -118,7 +123,7 @@ function EditListing({ params: paramsPromise }) {
                     .select();
 
                 if (insertError) {
-                    console.error('Error inserting image URL:', insertError);
+                    console.log('Error inserting image URL:', insertError);
                     toast('Error while saving image URL');
                     continue;
                 }
@@ -138,10 +143,13 @@ function EditListing({ params: paramsPromise }) {
         try {
             setLoading(true);
             console.log('Publishing Form Value:', formValue);
+            const newObject = Object.fromEntries(
+                Object.entries(formValue).filter(([key, value]) => (value != "" && value != 0))
+            );
     
             // เพิ่ม `active: true` ลงใน `formValue`
             const updatedValue = {
-                ...formValue,
+                ...newObject,
                 createdBy: user?.primaryEmailAddress?.emailAddress || 'Unknown',
                 active: true,
             };
@@ -162,11 +170,9 @@ function EditListing({ params: paramsPromise }) {
 
     
             // แสดงข้อความสำเร็จ
-            toast.success('Listing and images published successfully!', {
-                className: 'border-l-4 border-green-500',
-            });
+            toast.success('Listing saved and published successfully!', { type: "success" });
         } catch (err) {
-            console.error('Error:', err);
+            console.log('Error:', err);
             toast.error('Error while publishing the listing. Please try again later.', {
                 className: 'border-l-4 border-red-500',
             });
@@ -178,6 +184,7 @@ function EditListing({ params: paramsPromise }) {
     
     return (
         <div className='px-10 md:px-36 my-10'>
+            <ToastContainer />
             <h2 className='p-10 font-bold text-2xl mt-50 text-center'>Enter some more details about your listing</h2>
 
             <Formik
@@ -193,6 +200,9 @@ function EditListing({ params: paramsPromise }) {
                     toilet      : listing?.toilet       || '',
                     description : listing?.description  || '',
                     name        : listing?.name         || '',
+                    line        : listing?.line         || '',
+                    facebook    : listing?.facebook     || '',
+                    phone       : listing?.phone        || '',
                     profileImage: user?.imageUrl        || '',
                     fullName    : user?.fullName        || '',
                 }}
@@ -263,23 +273,38 @@ function EditListing({ params: paramsPromise }) {
                                 </div>
 
                                 <div className='flex flex-col gap-2'>
-                                    <h2 className='text-lg text-slate-500'>Guest Capacity</h2>
-                                    <Input type="number" id="capacity" value={values.capacity}placeholder="Ex.200" name="capacity" onChange={handleChange} />
+                                    <h2 className='text-lg text-slate-500'>Guest Capacity (People)</h2>
+                                    <Input type="number" id="capacity" defaultValue={listing?.capacity}placeholder="Ex.200" name="capacity" onChange={handleChange} />
                                 </div>
 
                                 <div className='flex flex-col gap-2'>
                                     <h2 className='text-lg text-slate-500'>Room Size</h2>
-                                    <Input type="number" id="roomsize" value={values.roomsize} placeholder="Ex.450 Sq.m" name="roomsize" onChange={handleChange} />
+                                    <Input type="number" id="roomsize" defaultValue={listing?.roomsize} placeholder="Ex.450 Sq.m" name="roomsize" onChange={handleChange} />
                                 </div>
 
                                 <div className='flex flex-col gap-2'>
                                     <h2 className='text-lg text-slate-500'>Parking</h2>
-                                    <Input type="number" id="parking" value={values.parking} placeholder="Ex.20" name="parking" onChange={handleChange} />
+                                    <Input type="number" id="parking" defaultValue={listing?.parking} placeholder="Ex.20" name="parking" onChange={handleChange} />
                                 </div>
 
                                 <div className='flex flex-col gap-2'>
                                     <h2 className='text-lg text-slate-500'>Price Per Night (₿)</h2>
-                                    <Input type="number" id="price" value={values.price} placeholder="Ex.500" name="price" onChange={handleChange} />
+                                    <Input type="number" id="price" defaultValue={listing?.price} placeholder="Ex.500" name="price" onChange={handleChange} />
+                                </div>
+
+                                <div className='flex flex-col gap-2'>
+                                    <h2 className='text-lg text-slate-500'>Line</h2>
+                                    <Input id="line" placeholder="Line ID" defaultValue={listing?.line} name="line" onChange={handleChange} />
+                                </div>
+
+                                <div className='flex flex-col gap-2'>
+                                    <h2 className='text-lg text-slate-500'>Facebook</h2>
+                                    <Input id="facebook" placeholder="Link" defaultValue={listing?.facebook} name="facebook" onChange={handleChange} />
+                                </div>
+
+                                <div className='flex flex-col gap-2'>
+                                    <h2 className='text-lg text-slate-500'>Phone</h2>
+                                    <Input id="phone" placeholder="Ex. 0801234567" defaultValue={listing?.phone} name="phone" onChange={handleChange} />
                                 </div>
 
                             </div>
@@ -303,12 +328,11 @@ function EditListing({ params: paramsPromise }) {
 
                                 <Button disabled={loading} variant="outline" className="text-primary border-primary">
                                     {loading ? <Loader className='animate-spin' /> : 'Save'}
-
                                 </Button>
 
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                        <Button type="button" disabled={loading}  onClick={() => publishBtnHandler(values)}>
+                                        <Button type="button" disabled={loading}>
                                             {loading ? <Loader className='animate-spin' /> : 'Save & Publish'}
                                         </Button>
                                     </AlertDialogTrigger>

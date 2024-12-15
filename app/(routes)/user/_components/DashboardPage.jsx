@@ -4,11 +4,39 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
-
+import { useUser } from '@clerk/nextjs';
+import { useParams } from 'next/navigation'
 
 function DashboardPage() {
+  const params = useParams()
+  const { user } = useUser();
   const [bookings, setBookings] = useState([]); // เก็บข้อมูลการจอง
   const [loading, setLoading] = useState(false); // สถานะโหลดข้อมูล
+
+
+  useEffect(() => {
+        if (user) {
+            verifyUserRecord();
+        }
+  }, [user]);
+  
+  const verifyUserRecord = async () => {
+      const id = (await params).id
+          const { data, error } = await supabase
+              .from('listing')
+              .select('*,listingImages(listing_id,url)')
+              .eq('createdBy', user?.primaryEmailAddress.emailAddress)
+              .eq('id', id);
+  
+          if (data) {
+              console.log(data);
+              setListing(data[0]);
+          }
+  
+          if (data?.length <= 0) {
+              router.replace('/');
+          }
+      };
 
   // ดึงข้อมูลการจองจาก Supabase
   useEffect(() => {
@@ -30,9 +58,12 @@ function DashboardPage() {
           .from("listing")
           .select()
           .eq("id", book.listing_id)
+        
         return { ...book, listing: data[0] }
       }))
-      const finalDataSorted = finalData.sort((a, b) => a.id - b.id)
+      console
+      const filterFinalData = finalData.filter(data => data.listing.createdBy == user?.primaryEmailAddress.emailAddress)
+      const finalDataSorted = filterFinalData.sort((a, b) => a.id - b.id)
       console.log("Fetched bookings:", finalDataSorted);
       setBookings(finalDataSorted)
     }

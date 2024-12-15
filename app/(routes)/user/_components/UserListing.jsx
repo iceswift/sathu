@@ -13,7 +13,7 @@ import { FaAccessibleIcon } from 'react-icons/fa';
 import { FaRegSquarePlus } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa"; // นำเข้าไอคอนแว่นขยาย
+import { FaSearch } from "react-icons/fa";
 import { GiChurch, GiMosque, GiKhanda, GiStarOfDavid } from 'react-icons/gi';
 
 import { useUser } from '@clerk/nextjs';
@@ -47,7 +47,7 @@ function UserListing() {
   const filteredListings = listing.filter((item) =>
     item?.name?.toLowerCase().includes(searchQuery.toLowerCase()) // กรองรายการตามชื่อ
   );
-  
+
 
   const handleDelete = async (id) => {
     // Delete related rows in the listingImages table
@@ -55,51 +55,48 @@ function UserListing() {
       .from('listingImages')
       .delete()
       .eq('listing_id', id);
-  
+
     if (imageError) {
       console.error('Error deleting related images:', imageError);
       return;
     }
-  
+
     // Delete the row in the listing table
     const { error: listingError } = await supabase
       .from('listing')
       .delete()
       .eq('id', id);
-  
+
     if (listingError) {
       console.error('Error deleting listing:', listingError);
       return;
     }
-  
+
     // Remove the deleted listing from state
     setListing((prevListings) => prevListings.filter((item) => item.id !== id));
   };
-  
-  
-  
 
   return (
     <div>
-<div className="flex justify-between items-center mb-4">
-    <h2 className="font-bold text-2xl">Manage your listing</h2>
-    <Link href="/add-new-listing" className="text-black-500 text-3xl">
-        <FaRegSquarePlus />
-    </Link>
-</div>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="font-bold text-2xl">Manage your listing</h2>
+        <Link href="/add-new-listing" className="text-black-500 text-3xl">
+          <FaRegSquarePlus />
+        </Link>
+      </div>
 
-{/* ช่องค้นหา */}
-<div className="relative mb-4">
-  <input
-    type="text"
-    placeholder="Search by name..."
-    value={searchQuery}
-    onChange={(e) => setSearchQuery(e.target.value)}
-    className="w-full p-2 border rounded-md pr-10" // เพิ่ม padding ด้านขวา
-  />
-  {/* ไอคอนแว่นขยาย */}
-  <FaSearch className="absolute right-3 top-2/4 transform -translate-y-1/2 text-gray-500" />
-</div>
+      {/* ช่องค้นหา */}
+      <div className="relative mb-4">
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 border rounded-md pr-10" // เพิ่ม padding ด้านขวา
+        />
+        {/* ไอคอนแว่นขยาย */}
+        <FaSearch className="absolute right-3 top-2/4 transform -translate-y-1/2 text-gray-500" />
+      </div>
 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -138,58 +135,58 @@ function UserListing() {
                   {item.description ? item.description.slice(0, 90) + '...' : 'No Description'}
                 </p>
                 <div>
-                <div className="flex gap-2 mt-2">
-                  <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
-                    {item?.religions === 'buddhism' && (
-                      <FaDharmachakra className="h-6 w-6 text-gray-500" /> /* ไอคอนพระธรรมจักร */
-                    )}
-                    {item?.religions === 'Christianity' && (
-                      <GiChurch className="h-6 w-6 text-gray-500" /> /* ไอคอนโบสถ์ */
-                    )}
-                    {item?.religions === 'Islam' && (
-                      <GiMosque className="h-6 w-6 text-gray-500" /> /* ไอคอนมัสยิด */
-                    )}
-                    {item?.religions === 'Sikhism' && (
-                      <GiKhanda className="h-6 w-6 text-gray-500" /> /* ไอคอนศาสนาซิกข์ */
-                    )}
-                    {item?.religions === 'Judaism' && (
-                      <GiStarOfDavid className="h-6 w-6 text-gray-500" /> /* ไอคอนดาวแห่งเดวิด */
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
-                    <FaUsers className="h-6 w-6 text-gray-500" />
-                    {item?.capacity || 'N/A'}
-                  </div>
-                  <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
-                    {item?.toilet === 'yes_pwd' ? (
-                      <FaAccessibleIcon className="h-6 w-6 text-gray-500" />
-                    ) : (
-                      'N/A'
-                    )}
+                  <div className="flex gap-2 mt-2">
+                    <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
+                      {item?.religions === 'buddhism' && (
+                        <FaDharmachakra className="h-6 w-6 text-gray-500" /> /* ไอคอนพระธรรมจักร */
+                      )}
+                      {item?.religions === 'Christianity' && (
+                        <GiChurch className="h-6 w-6 text-gray-500" /> /* ไอคอนโบสถ์ */
+                      )}
+                      {item?.religions === 'Islam' && (
+                        <GiMosque className="h-6 w-6 text-gray-500" /> /* ไอคอนมัสยิด */
+                      )}
+                      {item?.religions === 'Sikhism' && (
+                        <GiKhanda className="h-6 w-6 text-gray-500" /> /* ไอคอนศาสนาซิกข์ */
+                      )}
+                      {item?.religions === 'Judaism' && (
+                        <GiStarOfDavid className="h-6 w-6 text-gray-500" /> /* ไอคอนดาวแห่งเดวิด */
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
+                      <FaUsers className="h-6 w-6 text-gray-500" />
+                      {item?.capacity || 'N/A'}
+                    </div>
+                    <div className="flex items-center gap-2 bg-slate-200 rounded-md p-2 w-full text-gray-500 justify-center">
+                      {item?.toilet === 'yes_pwd' ? (
+                        <FaAccessibleIcon className="h-6 w-6 text-gray-500" />
+                      ) : (
+                        'N/A'
+                      )}
+                    </div>
                   </div>
                 </div>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  <Link href={'/place/' + item.id}>
+                    <Button size="sm" variant="outline" className="w-full flex justify-center items-center">
+                      <FaRegEye className="h-6 w-6" />
+                    </Button>
+                  </Link>
+                  <Link href={'/edit-listing/' + item.id}>
+                    <Button size="sm" className="w-full flex justify-center items-center">
+                      <FaRegEdit />
+                    </Button>
+                  </Link>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="w-full flex justify-center items-center"
+                    onClick={() => handleDelete(item.id)} // ส่ง item.id เพื่อใช้ลบ
+                  >
+                    <Trash />
+                  </Button>
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-2 mt-2">
-              <Link href={'/place/' + item.id}>
-              <Button size="sm" variant="outline" className="w-full flex justify-center items-center">
-                <FaRegEye className="h-6 w-6"/>
-              </Button>
-            </Link>
-                            <Link href={'/edit-listing/' + item.id}>
-              <Button size="sm" className="w-full flex justify-center items-center">
-                <FaRegEdit/>
-              </Button>
-            </Link>
-            <Button
-  size="sm"
-  variant="destructive"
-  className="w-full flex justify-center items-center"
-  onClick={() => handleDelete(item.id)} // ส่ง item.id เพื่อใช้ลบ
->
-  <Trash />
-</Button>
-              </div>
-            </div>
             </div>
           ))}
       </div>

@@ -18,6 +18,7 @@ export default function Home() {
     getData();
   }, []);
 
+
   const totalPages = Math.ceil(temples.filter((t) => t.active).length / itemsPerPage);
 
   const currentItems = temples

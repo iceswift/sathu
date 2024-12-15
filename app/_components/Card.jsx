@@ -49,10 +49,28 @@ export default function Card({ temple }) {
 
   if (loading) {
     return (
-      <div className="h-[230px] w-full bg-slate-200 animate-pulse rounded-lg "></div>
+      <div className="p-4 bg-white rounded-lg shadow-md border border-gray-300 animate-pulse">
+        {/* รูปภาพ Skeleton */}
+        <div className="h-[170px] w-full bg-gray-200 rounded-lg mb-2"></div>
+        {/* ข้อมูลภายใน Skeleton */}
+        <div className="space-y-2">
+          {/* ชื่อวัด */}
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          {/* ที่อยู่ */}
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          {/* รายละเอียดเพิ่มเติม */}
+          <div className="h-4 bg-gray-200 rounded w-full"></div>
+          <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+        </div>
+        {/* ข้อมูลเพิ่มเติม */}
+        <div className="grid grid-cols-3 gap-2 mt-4">
+          <div className="h-8 bg-gray-200 rounded"></div>
+          <div className="h-8 bg-gray-200 rounded"></div>
+          <div className="h-8 bg-gray-200 rounded"></div>
+        </div>
+      </div>
     );
   }
-
   return (
     <>
       <Link href={`/place/${temple.id}`}>

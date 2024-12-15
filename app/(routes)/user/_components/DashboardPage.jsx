@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 
 
-const DashboardPage = () => {
+function DashboardPage() {
   const [bookings, setBookings] = useState([]); // เก็บข้อมูลการจอง
   const [loading, setLoading] = useState(false); // สถานะโหลดข้อมูล
 

@@ -5,7 +5,8 @@ import { supabase } from '@/utils/supabase/client';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import { useUser } from '@clerk/nextjs';
-import { useParams } from 'next/navigation'
+import { useParams } from 'next/navigation';
+import emailjs from '@emailjs/browser';
 
 function DashboardPage() {
   const params = useParams()
@@ -103,6 +104,32 @@ function DashboardPage() {
     }
   };
 
+  const sendEmail = (booking) => {
+    emailjs
+      .send(
+        'service_gb1t1ff', // Service ID ของคุณ
+        'template_zy3w0l8', // Template ID ของคุณ
+        {
+          to_email: booking.user_email,        // อีเมลผู้รับ
+          place_name: booking.listing?.name,   // ชื่อสถานที่
+          start_date: booking.start,           // วันที่เริ่มต้น
+          end_date: booking.end,               // วันที่สิ้นสุด
+        },
+        '8859nVDGE1Rq7y7PS' // Public Key ของคุณ
+      )
+      .then(
+        (response) => {
+          console.log('SUCCESS!', response.status, response.text);
+          toast.success('Email sent successfully!');
+        },
+        (error) => {
+          console.log('FAILED...', error);
+          toast.error('Failed to send confirmation email.');
+        }
+      );
+  };
+  
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6">Dashboard - Booking Management</h1>
@@ -142,24 +169,29 @@ function DashboardPage() {
                   {booking.active ? 'Yes' : 'No'}
                 </td>
                 <td className="border p-2 flex gap-2 justify-center">
-                  {booking.active ? (
-                    <Button
-                      size="sm"
-                      onClick={() => updateStatus(booking.id, false)}
-                      className="bg-red-500 text-white hover:bg-red-600"
-                    >
-                      Disagree
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      onClick={() => updateStatus(booking.id, true)}
-                      className="bg-green-500 text-white hover:bg-green-600"
-                    >
-                      Agree
-                    </Button>
-                  )}
-                </td>
+  {booking.active ? (
+    <Button
+      size="sm"
+      onClick={() => updateStatus(booking.id, false)} // ส่ง Disagree
+      className="bg-red-500 text-white hover:bg-red-600"
+    >
+      Disagree
+    </Button>
+  ) : (
+    <Button
+      size="sm"
+      onClick={() => {
+        // อัปเดตสถานะและส่งอีเมล
+        updateStatus(booking.id, true); // อัปเดตสถานะการจอง
+        sendEmail(booking); // เรียกฟังก์ชันส่งอีเมล
+      }}
+      className="bg-green-500 text-white hover:bg-green-600"
+    >
+      Agree
+    </Button>
+  )}
+</td>
+
               </tr>
             ))}
           </tbody>
